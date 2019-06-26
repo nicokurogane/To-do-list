@@ -1,8 +1,17 @@
 const arrayTask = [];
-const form = document.getElementById("task-form")
+const form = document.getElementById("task-form");
+const taskTable = document.getElementById("task-table");
+const currentTaskId = 1;
+
+//inicializamos la pagina con los datos ya cargados
+window.addEventListener('load', function (event) {
+    console.log('Aqui vamos a cargar el ID');
+    //TODO: que este ID sea asignado dinamicamente
+    document.getElementById('id').value = currentTaskId;
+});
+
 
 form.addEventListener('submit', handleSubmit);
-
 
 //interceptamos el el submit para extraer la data
 function handleSubmit(e) {
@@ -22,19 +31,30 @@ function getFormData() {
 
     formChildren.forEach(element => {
         if (element.type !== 'submit') {
-            // console.log('-------------');
-            // console.log('id:' + element.id);
-            // console.log('name:' + element.name);
-            // console.log('type:' + element.type);
-
             if (element.type !== 'checkbox' || (element.type === 'checkbox' && element.checked))
                 taskObject[element.name] = element.value;
-
         }
     });
-    // console.log(taskObject);
+    taskObject.creationDate = Date.now();
+    console.log(taskObject);
     arrayTask.push(taskObject);
-    // console.log(arrayTask);
+     console.log(arrayTask);
+    addTaskToTable(taskObject);
+}
+
+function addTaskToTable(taskObject) {
+    console.log(taskTable);    
+    let newRow = `<tr>
+                    <th scope="row">${taskObject.id}</th>
+                    <td>${taskObject.task}</td>
+                    <td>${taskObject.asignee}</td>
+                    <td>${taskObject.status}</td>
+                    <td>${taskObject.creationDate} </td>
+                    <td>80/06/2019</td>
+                </tr>`;
+    const tr = document.createElement('tr');
+    tr.innerHTML = newRow;
+    taskTable.appendChild(tr);
 }
 
 
