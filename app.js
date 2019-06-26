@@ -46,27 +46,28 @@ function getFormData() {
 
 function addTaskToTable(taskToAdd) {
     console.log(taskTable);    
-    let newRow = `<tr>
-                    <th scope="row">${taskToAdd.id}</th>
+    let newRow = `  <th scope="row">${taskToAdd.id}</th>
                     <td>${taskToAdd.task}</td>
                     <td>${taskToAdd.asignee}</td>
                     <td>${taskToAdd.status}</td>
                     <td>${taskToAdd.creationDate} </td>
                     <td>
                       <button type="button" onclick="deleteTask(${taskToAdd.id})"> X </button>
-                    </td>
-                </tr>`;
+                    </td>`;
     const tr = document.createElement('tr');
+    tr.id =`task${taskToAdd.id}`;
     tr.innerHTML = newRow;
     taskTable.appendChild(tr);
+
+    //hijo agregado, pasamos actualizaremos el ID
     currentTaskId++;
     document.getElementById('id').value = currentTaskId;
 }
 
-function deleteTask(idToDelete){
-    // console.log(idToDelete);  
+function deleteTask(idToDelete){ 
     arrayTask = arrayTask.filter(task => task.id != idToDelete);
-    // console.log(arrayTask);
+    let rowToDelete = document.getElementById(`task${idToDelete}`);
+    taskTable.removeChild(rowToDelete);
 }
 
 
