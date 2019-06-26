@@ -9,11 +9,23 @@
 <body>
     <h1>TO-DO LIST</h1>
     <form id="task-form">
+        <label for="task">Task:</label>
         <input id="task" name="task" placeholder="Task To Add" /><br/><br/>
-        <input id="test" name="test" placeholder="hijo to testear" /><br/><br/>
+        
         <hr>
-        <input type="radio" id="status"  name="status" value="Pending"/>Pending
-        <input type="radio" id="status"  name="status" value="Done"/>Done<br/><br/>
+        <label for="asignee"></label>
+        <select id="asignee" name="asignee">
+            <option value="Frank">Frank</option>
+            <option value="John">John</option>
+            <option value="Alice">Alice</option>
+            <option value="Mary">Mary</option>
+        </select><br/><br/>
+
+        <hr>
+        <label for="checkbox"></label>
+        <input type="checkbox" id="status"  name="status" value="Pending"/>Pending
+        <input type="checkbox" id="status"  name="status" value="Done"/>Done<br/><br/>
+
         <input type="submit" value="Add Task"/>
     </form>
 

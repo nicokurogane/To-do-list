@@ -12,28 +12,29 @@ function handleSubmit(e) {
 }
 
 
-function validateForm(){
-    
+function validateForm() {
+
 }
 
-const getFormData = () => {
-    let arrayToTest = form.elements;
-    let formChildren = Array.from(arrayToTest);
+function getFormData() {
+    let formChildren = Array.from(form.elements);
     var taskObject = {};
 
     formChildren.forEach(element => {
-        if (element.type !== 'submit') {            
+        if (element.type !== 'submit') {
+            // console.log('-------------');
+            // console.log('id:' + element.id);
+            // console.log('name:' + element.name);
+            // console.log('type:' + element.type);
 
-            console.log('----------------');
-            console.log('tipo:' + element.type);
-            console.log('id:' + element.id);
-            console.log('name:' + element.name);
-            console.log('value:' + element.value);
-            taskObject[element.name] = element.value;
+            if (element.type !== 'checkbox' || (element.type === 'checkbox' && element.checked))
+                taskObject[element.name] = element.value;
+
         }
     });
-
-    console.log(taskObject);
+    // console.log(taskObject);
+    arrayTask.push(taskObject);
+    // console.log(arrayTask);
 }
 
 
