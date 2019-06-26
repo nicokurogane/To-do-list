@@ -18,16 +18,35 @@ form.addEventListener('submit', handleSubmit);
 //interceptamos el el submit para extraer la data
 function handleSubmit(e) {
     e.preventDefault();
-    validateForm();
-    getFormData();
+    if(validateForm()) addTask();
 }
 
-
+//devuelve false si el formulario no esta validado
 function validateForm() {
 
+    let inputTaskValue = String(document.getElementById('task').value);
+    if( inputTaskValue.length > 100 || inputTaskValue === '' ){
+        alert('task is not correct.');
+        return false;
+    }
+
+    let statusInputsArray = Array.from(document.getElementsByName('status'));
+    let numberOfChecked = 0;
+    statusInputsArray.forEach( checkbox => {
+        numberOfChecked += checkbox.checked ?  1:0;
+    });
+
+    if(numberOfChecked === 0){
+        alert('you must select Status condition.');
+        return false;
+    } else if(numberOfChecked > 1){
+        alert('only 1 Status condition is allowed.');
+        return false;
+    }
+
 }
 
-function getFormData() {
+function addTask() {
     let formChildren = Array.from(form.elements);
     var taskObject = {};
 
@@ -38,9 +57,7 @@ function getFormData() {
         }
     });
     taskObject.creationDate = Date.now();
-    console.log(taskObject);
     arrayTask.push(taskObject);
-     console.log(arrayTask);
     addTaskToTable(taskObject);
 }
 
