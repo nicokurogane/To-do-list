@@ -3,8 +3,15 @@
 }
 
 .task-added{
-    margin-top: 5vh;
+    margin-top: 8vh;
     display: flex;
     justify-content: center;
-    align-self: center;
+    align-items: center;
+}
+
+.filter-container{
+    margin:  6vh 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }

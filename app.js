@@ -66,10 +66,13 @@ function addTask() {
     arrayTask.push(taskObject);
     addTaskToLocalStore();
     addTaskToTable(taskObject);
+
+    //hijo agregado, pasamos actualizaremos el ID
+    currentTaskId++;
+    document.getElementById('id').value = currentTaskId;
 }
 
 function addTaskToTable(taskToAdd) {
-    console.log(taskTable);
     let newRow = `  <th scope="row">${taskToAdd.id}</th>
                     <td>${taskToAdd.task}</td>
                     <td>${taskToAdd.asignee}</td>
@@ -82,10 +85,6 @@ function addTaskToTable(taskToAdd) {
     tr.id = `task${taskToAdd.id}`;
     tr.innerHTML = newRow;
     taskTable.appendChild(tr);
-
-    //hijo agregado, pasamos actualizaremos el ID
-    currentTaskId++;
-    document.getElementById('id').value = currentTaskId;
 }
 
 function addTaskToLocalStore() {
@@ -105,6 +104,48 @@ function deleteTask(idToDelete) {
     let rowToDelete = document.getElementById(`task${idToDelete}`);
     taskTable.removeChild(rowToDelete);
     deleteTaskFromLocalStore(idToDelete);
+}
+
+//FILTROS
+document.getElementById('filter-text').addEventListener('keyup', function (e) {
+    executeFilter('task', e.target.value);
+});
+
+
+document.getElementById('filter-status').addEventListener('keyup', function (e) {
+    executeFilter('status', e.target.value);
+});
+
+document.getElementById('filter-date').addEventListener('keyup', function (e) {
+    executeFilter('creationDate', e.target.value);
+});
+
+
+
+function executeFilter(propertyToUse, filter) {
+    if (filter === '') {
+        resetTaskTableFromLocalStorage();
+        return;
+    }
+
+    arrayTask = arrayTask.filter(element => String(element[propertyToUse]).includes(filter));
+    while (taskTable.firstChild) {
+        taskTable.removeChild(taskTable.firstChild);
+    }
+    arrayTask.forEach(task => {
+        addTaskToTable(task);
+    });
+}
+
+function resetTaskTableFromLocalStorage() {
+    arrayTask = [];
+    arrayTask = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
+    while (taskTable.firstChild) {
+        taskTable.removeChild(taskTable.firstChild);
+    }
+    arrayTask.forEach(task => {
+        addTaskToTable(task);
+    });
 }
 
 

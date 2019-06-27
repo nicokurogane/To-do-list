@@ -23,19 +23,35 @@
             <option value="John">John</option>
             <option value="Alice">Alice</option>
             <option value="Mary">Mary</option>
-        </select><br/><br/>
+        </select><br /><br />
 
         <hr>
-        <label for="checkbox">Status:</label>
-        <input type="checkbox" class="required-input" id="status" name="status" value="Pending" />Pending
+        <label for="status">Status:</label>
+        <input type="checkbox" class="required-input" id="status" name="status" value="Pending" />
         <input type="checkbox" class="required-input" id="status" name="status" value="Done" />Done<br /><br />
 
         <input type="submit" value="Add Task" />
     </form>
 
     <br /><br />
-    <!-- TASK ADDED -->
-    <h3>To:do</h3>
+    <!-- TASK ADDED and filter-->
+
+    <h3>To-dos</h3>
+    <div class="filter-container">
+        <div>
+            <label for="filter-name">By Name:</label>
+            <input type="text" name="filter-name" id="filter-text" placeholder="What task are you looking for?" />
+        </div>
+        <div>
+            <label for="status">By Status:</label>
+            <input type="text" name="filter-status" id="filter-status"
+                placeholder="Which status are you looking for?" />
+        </div>
+        <div>
+            <label for="status">By Date:</label>
+            <input type="text" name="filter-date" id="filter-date" placeholder="Which date are you looking for?" />
+        </div>
+    </div>
     <div class="task-added">
         <table class="table">
             <thead>
@@ -43,18 +59,11 @@
                     <th scope="col">id</th>
                     <th scope="col">Name</th>
                     <th scope="col">Asignee</th>
-                    <th scope="col">Status</th>                   
+                    <th scope="col">Status</th>
                     <th scope="col">Creation date</th>
                 </tr>
             </thead>
             <tbody id="task-table">
-                <tr>
-                    <th scope="row">0</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>26/06/2019</td>
-                </tr>
             </tbody>
         </table>
     </div>
