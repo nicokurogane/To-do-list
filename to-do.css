@@ -3,7 +3,7 @@
 }
 
 .task-added{
-    margin-top: 8vh;
+    margin: 8vh 15vw;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,7 +17,7 @@
 }
 
 .form-container{
-    margin-bottom: 50px;
+    margin-bottom: 15vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -29,7 +29,7 @@
 }
 
 .filter-container{
-    margin:  6vh 0;
+    margin:  6vh 20vw;
     display: flex;
     justify-content: space-around;
     align-items: center;

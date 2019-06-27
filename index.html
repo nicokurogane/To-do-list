@@ -12,52 +12,50 @@
 </head>
 
 <body>
-    <div class="card">
-    <div class="form-container  card-body">
-        <h1>TO-DO LIST</h1>
-        <form id="task-form">
-            <input type="hidden" id="id" name="id" />
-            <div class="form-component">
-                <label for="task">Task</label>
-                <input id="task" name="task" placeholder="Task To Add" />
-            </div>
-            <div class="form-component">
-                <label for="asignee">Asignee</label>
-                <select id="asignee" name="asignee">
-                    <option value="Frank">Frank</option>
-                    <option value="John">John</option>
-                    <option value="Alice">Alice</option>
-                    <option value="Mary">Mary</option>
-                </select>
-            </div>
-            <div class="form-component">
-                <label for="status">Status: </label>
-                <div class="status-select">
-                    <div> <input type="checkbox" class="required-input" id="status" name="status"
-                            value="Pending" />Pending</div>
-                    <div> <input type="checkbox" class="required-input" id="status" name="status" value="Done" />Done
+        <div class="form-container  card-body">
+            <h1>TO-DO LIST</h1>
+            <form id="task-form">
+                <input type="hidden" id="id" name="id" />
+                <div class="form-component form-group">
+                    <label for="task">Task</label>
+                    <input id="task" name="task" placeholder="Task To Add" />
+                </div>
+                <div class="form-component form-group">
+                    <label for="asignee">Asignee</label>
+                    <select id="asignee" name="asignee">
+                        <option value="Frank">Frank</option>
+                        <option value="John">John</option>
+                        <option value="Alice">Alice</option>
+                        <option value="Mary">Mary</option>
+                    </select>
+                </div>
+                <div class="form-component form-group">
+                    <label for="status">Status: </label>
+                    <div class="status-select">
+                        <div> <input type="checkbox" class="required-input" id="status" name="status"
+                                value="Pending" />Pending</div>
+                        <div> <input type="checkbox" class="required-input" id="status" name="status"
+                                value="Done" />Done
+                        </div>
                     </div>
                 </div>
-            </div>
-            <input type="submit" class="btn btn-primary" value="Add Task" />
-        </form>
-    </div>
-</div>
+                <input type="submit" class="btn btn-primary" value="Add Task" />
+            </form>
+        </div>
     <!-- TASK ADDED and filter-->
 
-    <h3>To-dos</h3>
     <div class="filter-container">
         <div>
-            <label for="filter-name">By Name:</label>
+            <label for="filter-name">Filter by Name:</label>
             <input type="text" name="filter-name" id="filter-text" placeholder="What task are you looking for?" />
         </div>
         <div>
-            <label for="status">By Status:</label>
+            <label for="status">Filter y Status:</label>
             <input type="text" name="filter-status" id="filter-status"
                 placeholder="Which status are you looking for?" />
         </div>
         <div>
-            <label for="status">By Date:</label>
+            <label for="status">Filter by Date:</label>
             <input type="text" name="filter-date" id="filter-date" placeholder="Which date are you looking for?" />
         </div>
     </div>

@@ -146,5 +146,3 @@ function resetTaskTableFromLocalStorage() {
         addTaskToTable(task);
     });
 }
-
-
