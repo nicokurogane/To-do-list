@@ -79,7 +79,7 @@ function addTaskToTable(taskToAdd) {
                     <td>${taskToAdd.status}</td>
                     <td>${taskToAdd.creationDate} </td>
                     <td>
-                      <button type="button" onclick="deleteTask(${taskToAdd.id})"> X </button>
+                      <button type="button" class="btn btn-danger" onclick="deleteTask(${taskToAdd.id})"> X </button>
                     </td>`;
     const tr = document.createElement('tr');
     tr.id = `task${taskToAdd.id}`;
@@ -119,7 +119,6 @@ document.getElementById('filter-status').addEventListener('keyup', function (e) 
 document.getElementById('filter-date').addEventListener('keyup', function (e) {
     executeFilter('creationDate', e.target.value);
 });
-
 
 
 function executeFilter(propertyToUse, filter) {

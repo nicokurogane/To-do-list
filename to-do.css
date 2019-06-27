@@ -9,9 +9,39 @@
     align-items: center;
 }
 
+#task-form{
+    margin-top: 5vh;
+    display: flex;
+    justify-content: center;
+
+}
+
+.form-container{
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#task-form > div {
+    margin: 0 3vh;
+}
+
 .filter-container{
     margin:  6vh 0;
     display: flex;
     justify-content: space-around;
     align-items: center;
+}
+
+
+.form-component{
+    display: flex;
+    flex-direction: column;
+}
+
+.status-select{
+    display: flex;
+    flex-direction: column;
 }

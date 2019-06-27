@@ -6,34 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="to-do.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Todo-List</title>
 </head>
 
 <body>
-    <h1>TO-DO LIST</h1>
-    <form id="task-form">
-        <input type="hidden" id="id" name="id" />
-        <label for="task">Task:</label>
-        <input id="task" name="task" placeholder="Task To Add" /><br /><br />
-
-        <hr>
-        <label for="asignee">Asignee:</label>
-        <select id="asignee" name="asignee">
-            <option value="Frank">Frank</option>
-            <option value="John">John</option>
-            <option value="Alice">Alice</option>
-            <option value="Mary">Mary</option>
-        </select><br /><br />
-
-        <hr>
-        <label for="status">Status:</label>
-        <input type="checkbox" class="required-input" id="status" name="status" value="Pending" />
-        <input type="checkbox" class="required-input" id="status" name="status" value="Done" />Done<br /><br />
-
-        <input type="submit" value="Add Task" />
-    </form>
-
-    <br /><br />
+    <div class="card">
+    <div class="form-container  card-body">
+        <h1>TO-DO LIST</h1>
+        <form id="task-form">
+            <input type="hidden" id="id" name="id" />
+            <div class="form-component">
+                <label for="task">Task</label>
+                <input id="task" name="task" placeholder="Task To Add" />
+            </div>
+            <div class="form-component">
+                <label for="asignee">Asignee</label>
+                <select id="asignee" name="asignee">
+                    <option value="Frank">Frank</option>
+                    <option value="John">John</option>
+                    <option value="Alice">Alice</option>
+                    <option value="Mary">Mary</option>
+                </select>
+            </div>
+            <div class="form-component">
+                <label for="status">Status: </label>
+                <div class="status-select">
+                    <div> <input type="checkbox" class="required-input" id="status" name="status"
+                            value="Pending" />Pending</div>
+                    <div> <input type="checkbox" class="required-input" id="status" name="status" value="Done" />Done
+                    </div>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Add Task" />
+        </form>
+    </div>
+</div>
     <!-- TASK ADDED and filter-->
 
     <h3>To-dos</h3>
