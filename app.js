@@ -62,7 +62,7 @@ function addTask() {
                 taskObject[element.name] = element.value;
         }
     });
-    taskObject.creationDate = Date.now();
+    taskObject.creationDate = new Date().toLocaleString("es-SV");
     arrayTask.push(taskObject);
     addTaskToLocalStore();
     addTaskToTable(taskObject);
@@ -127,7 +127,7 @@ function executeFilter(propertyToUse, filter) {
         return;
     }
 
-    arrayTask = arrayTask.filter(element => String(element[propertyToUse]).includes(filter));
+    arrayTask = arrayTask.filter(element => element[propertyToUse].includes(filter));
     while (taskTable.firstChild) {
         taskTable.removeChild(taskTable.firstChild);
     }
