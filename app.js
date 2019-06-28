@@ -1,5 +1,6 @@
 var arrayTask = [];
 var currentTaskId = 1;
+var isSortOrderOldestToNewest = true;
 const form = document.getElementById("task-form");
 const taskTable = document.getElementById("task-table");
 const TASK_ARRAY_KEY = "task";
@@ -8,14 +9,21 @@ const TASK_ARRAY_KEY = "task";
 //inicializamos la pagina con los datos ya cargados
 window.addEventListener('load', function (event) {
     console.log('Aqui vamos a cargar el ID');
-    //TODO: que este ID sea asignado dinamicamente
+
     document.getElementById('id').value = currentTaskId;
 
     if (localStorage.getItem(TASK_ARRAY_KEY) !== null) {
+        //revisamos
         arrayTask = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
+        let lastHighestId = 0;
         arrayTask.forEach(task => {
             addTaskToTable(task);
+            if (lastHighestId < task.id) lastHighestId = task.id;
         });
+        console.log('inicilizando IDS: ' + lastHighestId);
+        currentTaskId = Number(lastHighestId) + 1;
+
+        document.getElementById('id').value = currentTaskId;
     }
 });
 
@@ -62,7 +70,7 @@ function addTask() {
                 taskObject[element.name] = element.value;
         }
     });
-    taskObject.creationDate = new Date().toLocaleString("es-SV");
+    taskObject.creationDate = new Date();
     arrayTask.push(taskObject);
     addTaskToLocalStore();
     addTaskToTable(taskObject);
@@ -77,7 +85,7 @@ function addTaskToTable(taskToAdd) {
                     <td>${taskToAdd.task}</td>
                     <td>${taskToAdd.asignee}</td>
                     <td>${taskToAdd.status}</td>
-                    <td>${taskToAdd.creationDate} </td>
+                    <td>${new Date(taskToAdd.creationDate).toLocaleString('es-SV')} </td>
                     <td>
                       <button type="button" class="btn btn-danger" onclick="deleteTask(${taskToAdd.id})"> X </button>
                     </td>`;
@@ -116,10 +124,35 @@ document.getElementById('filter-status').addEventListener('keyup', function (e) 
     executeFilter('status', e.target.value);
 });
 
-document.getElementById('filter-date').addEventListener('keyup', function (e) {
-    executeFilter('creationDate', e.target.value);
-});
+document.getElementById('sort-date').addEventListener('click', function (e) {
 
+    if (isSortOrderOldestToNewest) {
+        document.getElementById('sort-date').value = "Sort by Date (Oldest First)";
+    } else {
+        document.getElementById('sort-date').value = "Sort by Date (Newest First)";
+        
+    }
+
+    arrayTask.sort(function (a, b) {
+        let dateA = new Date(a.creationDate)
+        let dateB = new Date(b.creationDate);
+        if (isSortOrderOldestToNewest) {
+            if (dateA > dateB) return -1;
+            if (dateA < dateB) return 1;
+        } else {
+            if (dateA < dateB) return -1;
+            if (dateA > dateB) return 1;
+        }
+        return 0;
+    });
+    while (taskTable.firstChild) {
+        taskTable.removeChild(taskTable.firstChild);
+    }
+    arrayTask.forEach(task => {
+        addTaskToTable(task);
+    });
+    isSortOrderOldestToNewest = !isSortOrderOldestToNewest;
+});
 
 function executeFilter(propertyToUse, filter) {
     if (filter === '') {

@@ -12,17 +12,17 @@
 </head>
 
 <body>
-        <div class="form-container  card-body">
+        <div class="form-container">
             <h1>TO-DO LIST</h1>
             <form id="task-form">
                 <input type="hidden" id="id" name="id" />
                 <div class="form-component form-group">
                     <label for="task">Task</label>
-                    <input id="task" name="task" placeholder="Task To Add" />
+                    <input id="task" name="task" class="form-control" placeholder="Task To Add" />
                 </div>
-                <div class="form-component form-group">
+                <div class="form-component form-group ">
                     <label for="asignee">Asignee</label>
-                    <select id="asignee" name="asignee">
+                    <select id="asignee" name="asignee" class="browser-default custom-select">
                         <option value="Frank">Frank</option>
                         <option value="John">John</option>
                         <option value="Alice">Alice</option>
@@ -47,16 +47,15 @@
     <div class="filter-container">
         <div>
             <label for="filter-name">Filter by Name:</label>
-            <input type="text" name="filter-name" id="filter-text" placeholder="What task are you looking for?" />
+            <input type="text" name="filter-name" id="filter-text" class="form-control" placeholder="What task are you looking for?" />
         </div>
         <div>
             <label for="status">Filter y Status:</label>
-            <input type="text" name="filter-status" id="filter-status"
+            <input type="text" name="filter-status" id="filter-status" class="form-control"
                 placeholder="Which status are you looking for?" />
         </div>
         <div>
-            <label for="status">Filter by Date:</label>
-            <input type="text" name="filter-date" id="filter-date" placeholder="Which date are you looking for?" />
+            <input type="button" name="sort-date" id="sort-date" class="btn btn-primary" value="Sort by Date (Newest First)"/>
         </div>
     </div>
     <div class="task-added">
@@ -68,6 +67,7 @@
                     <th scope="col">Asignee</th>
                     <th scope="col">Status</th>
                     <th scope="col">Creation date</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody id="task-table">
