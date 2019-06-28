@@ -116,48 +116,14 @@ function deleteTask(idToDelete) {
 }
 
 //Filters
-document.getElementById('filter-text').addEventListener('keyup', function (e) {
-    
+document.getElementById('filter-text').addEventListener('keyup', function (e) {    
     filtersToApply.task = e.target.value;
-
-    resetTaskTableFromLocalStorage();
-    if (filtersToApply.task !== '') arrayTask = arrayTask.filter(element => element['task'].includes(filtersToApply.task));
-    if (filtersToApply.status !== '') arrayTask = arrayTask.filter(element => element['status'].includes(filtersToApply.status));
-    arrayTask.sort(function (a, b) {
-        let dateA = new Date(a.creationDate)
-        let dateB = new Date(b.creationDate);
-        if (!filtersToApply.oldestToNewest) {
-            if (dateA > dateB) return -1;
-            if (dateA < dateB) return 1;
-        } else {
-            if (dateA < dateB) return -1;
-            if (dateA > dateB) return 1;
-        }
-        return 0;
-    });
-    rerenderTaskOnTable(arrayTask);
+    rerenderFilteredTasks();   
 });
 
-document.getElementById('filter-status').addEventListener('change', function (e) {
-    
+document.getElementById('filter-status').addEventListener('change', function (e) {    
     filtersToApply.status = e.target.value;
-
-    resetTaskTableFromLocalStorage();
-    if (filtersToApply.task !== '') arrayTask = arrayTask.filter(element => element['task'].includes(filtersToApply.task));
-    if (filtersToApply.status !== '') arrayTask = arrayTask.filter(element => element['status'].includes(filtersToApply.status));
-    arrayTask.sort(function (a, b) {
-        let dateA = new Date(a.creationDate)
-        let dateB = new Date(b.creationDate);
-        if (!filtersToApply.oldestToNewest) {
-            if (dateA > dateB) return -1;
-            if (dateA < dateB) return 1;
-        } else {
-            if (dateA < dateB) return -1;
-            if (dateA > dateB) return 1;
-        }
-        return 0;
-    });
-    rerenderTaskOnTable(arrayTask);
+    rerenderFilteredTasks();   
 });
 
 document.getElementById('sort-date').addEventListener('click', function (e) {
@@ -181,7 +147,6 @@ document.getElementById('sort-date').addEventListener('click', function (e) {
     });
     rerenderTaskOnTable(arrayTask);
     filtersToApply.oldestToNewest = !filtersToApply.oldestToNewest;
-    console.log(filtersToApply.oldestToNewest );
 });
 
 
@@ -198,4 +163,23 @@ function rerenderTaskOnTable(arrayWithTasks) {
     arrayWithTasks.forEach(task => {
         addTaskToTable(task);
     });
+}
+
+function rerenderFilteredTasks(){
+    resetTaskTableFromLocalStorage();
+    if (filtersToApply.task !== '') arrayTask = arrayTask.filter(element => element['task'].includes(filtersToApply.task));
+    if (filtersToApply.status !== '') arrayTask = arrayTask.filter(element => element['status'].includes(filtersToApply.status));
+    arrayTask.sort(function (a, b) {
+        let dateA = new Date(a.creationDate)
+        let dateB = new Date(b.creationDate);
+        if (!filtersToApply.oldestToNewest) {
+            if (dateA > dateB) return -1;
+            if (dateA < dateB) return 1;
+        } else {
+            if (dateA < dateB) return -1;
+            if (dateA > dateB) return 1;
+        }
+        return 0;
+    });
+    rerenderTaskOnTable(arrayTask);
 }
