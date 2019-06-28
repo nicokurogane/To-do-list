@@ -51,8 +51,14 @@
         </div>
         <div>
             <label for="status">Filter y Status:</label>
-            <input type="text" name="filter-status" id="filter-status" class="form-control"
-                placeholder="Which status are you looking for?" />
+            <!-- <input type="text" name="filter-status" id="filter-status" class="form-control"
+                placeholder="Which status are you looking for?" /> -->
+
+            <select name="filter-status" id="filter-status" class="browser-default custom-select">
+                    <option value=''>No Filter</option>
+                    <option value='Pending'>Pending</option>
+                    <option value='Done'>Done</option>
+           </select>    
         </div>
         <div>
             <input type="button" name="sort-date" id="sort-date" class="btn btn-primary" value="Sort by Date (Newest First)"/>

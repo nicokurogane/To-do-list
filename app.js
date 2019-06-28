@@ -1,6 +1,10 @@
 var arrayTask = [];
+const filtersToApply = {
+    task: '',
+    status:'',
+    oldestToNewest: true
+};
 var currentTaskId = 1;
-var isSortOrderOldestToNewest = true;
 const form = document.getElementById("task-form");
 const taskTable = document.getElementById("task-table");
 const TASK_ARRAY_KEY = "task";
@@ -42,7 +46,7 @@ function handleSubmit(e) {
 function validateForm() {
     let inputTaskValue = String(document.getElementById('task').value);
     if (inputTaskValue.length > 100 || inputTaskValue === '') {
-        alert('task is not correct.');
+        alert(`Task musn't be longer than 100 characters and can't be null.`);
         return false;
     }
 
@@ -74,7 +78,7 @@ function addTask() {
     addTaskToLocalStore();
     addTaskToTable(taskObject);
 
-    //hijo agregado, pasamos actualizaremos el ID
+    //Now that the task is added, we must update the currentId for new Tasks
     currentTaskId++;
     document.getElementById('id').value = currentTaskId;
 }
@@ -99,10 +103,8 @@ function addTaskToLocalStore() {
 }
 
 function deleteTaskFromLocalStore(idTaskToDelete) {
-    console.log(idTaskToDelete);
     let tempArray = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
     tempArray = tempArray.filter(task => task.id != idTaskToDelete);
-
     localStorage.setItem(TASK_ARRAY_KEY, JSON.stringify(tempArray));
 }
 
@@ -113,27 +115,18 @@ function deleteTask(idToDelete) {
     deleteTaskFromLocalStore(idToDelete);
 }
 
-//FILTROS
+//Filters
 document.getElementById('filter-text').addEventListener('keyup', function (e) {
-    executeFilter('task', e.target.value);
-});
+    
+    filtersToApply.task = e.target.value;
 
-
-document.getElementById('filter-status').addEventListener('keyup', function (e) {
-    executeFilter('status', e.target.value);
-});
-
-document.getElementById('sort-date').addEventListener('click', function (e) {
-    if (isSortOrderOldestToNewest) {
-        document.getElementById('sort-date').value = "Sort by Date (Oldest First)";
-    } else {
-        document.getElementById('sort-date').value = "Sort by Date (Newest First)";
-    }
-
+    resetTaskTableFromLocalStorage();
+    if (filtersToApply.task !== '') arrayTask = arrayTask.filter(element => element['task'].includes(filtersToApply.task));
+    if (filtersToApply.status !== '') arrayTask = arrayTask.filter(element => element['status'].includes(filtersToApply.status));
     arrayTask.sort(function (a, b) {
         let dateA = new Date(a.creationDate)
         let dateB = new Date(b.creationDate);
-        if (isSortOrderOldestToNewest) {
+        if (!filtersToApply.oldestToNewest) {
             if (dateA > dateB) return -1;
             if (dateA < dateB) return 1;
         } else {
@@ -143,17 +136,54 @@ document.getElementById('sort-date').addEventListener('click', function (e) {
         return 0;
     });
     rerenderTaskOnTable(arrayTask);
-    isSortOrderOldestToNewest = !isSortOrderOldestToNewest;
 });
 
-function executeFilter(propertyToUse, filter) {
-    if (filter === '') {
-        resetTaskTableFromLocalStorage();
-        return;
-    }
-    arrayTask = arrayTask.filter(element => element[propertyToUse].includes(filter));
+document.getElementById('filter-status').addEventListener('change', function (e) {
+    
+    filtersToApply.status = e.target.value;
+
+    resetTaskTableFromLocalStorage();
+    if (filtersToApply.task !== '') arrayTask = arrayTask.filter(element => element['task'].includes(filtersToApply.task));
+    if (filtersToApply.status !== '') arrayTask = arrayTask.filter(element => element['status'].includes(filtersToApply.status));
+    arrayTask.sort(function (a, b) {
+        let dateA = new Date(a.creationDate)
+        let dateB = new Date(b.creationDate);
+        if (!filtersToApply.oldestToNewest) {
+            if (dateA > dateB) return -1;
+            if (dateA < dateB) return 1;
+        } else {
+            if (dateA < dateB) return -1;
+            if (dateA > dateB) return 1;
+        }
+        return 0;
+    });
     rerenderTaskOnTable(arrayTask);
-}
+});
+
+document.getElementById('sort-date').addEventListener('click', function (e) {
+    if (filtersToApply.oldestToNewest) {
+        document.getElementById('sort-date').value = "Sort by Date (Oldest First)";
+    } else {
+        document.getElementById('sort-date').value = "Sort by Date (Newest First)";
+    }
+
+    arrayTask.sort(function (a, b) {
+        let dateA = new Date(a.creationDate)
+        let dateB = new Date(b.creationDate);
+        if (filtersToApply.oldestToNewest) {
+            if (dateA > dateB) return -1;
+            if (dateA < dateB) return 1;
+        } else {
+            if (dateA < dateB) return -1;
+            if (dateA > dateB) return 1;
+        }
+        return 0;
+    });
+    rerenderTaskOnTable(arrayTask);
+    filtersToApply.oldestToNewest = !filtersToApply.oldestToNewest;
+    console.log(filtersToApply.oldestToNewest );
+});
+
 
 function resetTaskTableFromLocalStorage() {
     arrayTask = [];
@@ -161,7 +191,7 @@ function resetTaskTableFromLocalStorage() {
     rerenderTaskOnTable(arrayTask);
 }
 
-function rerenderTaskOnTable(arrayWithTasks){
+function rerenderTaskOnTable(arrayWithTasks) {
     while (taskTable.firstChild) {
         taskTable.removeChild(taskTable.firstChild);
     }
