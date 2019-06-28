@@ -56,7 +56,6 @@ function validateForm() {
         alert('you must select 1 status condition.');
         return false;
     }
-
     return true;
 }
 
@@ -125,12 +124,10 @@ document.getElementById('filter-status').addEventListener('keyup', function (e) 
 });
 
 document.getElementById('sort-date').addEventListener('click', function (e) {
-
     if (isSortOrderOldestToNewest) {
         document.getElementById('sort-date').value = "Sort by Date (Oldest First)";
     } else {
         document.getElementById('sort-date').value = "Sort by Date (Newest First)";
-        
     }
 
     arrayTask.sort(function (a, b) {
@@ -145,12 +142,7 @@ document.getElementById('sort-date').addEventListener('click', function (e) {
         }
         return 0;
     });
-    while (taskTable.firstChild) {
-        taskTable.removeChild(taskTable.firstChild);
-    }
-    arrayTask.forEach(task => {
-        addTaskToTable(task);
-    });
+    rerenderTaskOnTable(arrayTask);
     isSortOrderOldestToNewest = !isSortOrderOldestToNewest;
 });
 
@@ -159,23 +151,21 @@ function executeFilter(propertyToUse, filter) {
         resetTaskTableFromLocalStorage();
         return;
     }
-
     arrayTask = arrayTask.filter(element => element[propertyToUse].includes(filter));
-    while (taskTable.firstChild) {
-        taskTable.removeChild(taskTable.firstChild);
-    }
-    arrayTask.forEach(task => {
-        addTaskToTable(task);
-    });
+    rerenderTaskOnTable(arrayTask);
 }
 
 function resetTaskTableFromLocalStorage() {
     arrayTask = [];
     arrayTask = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
+    rerenderTaskOnTable(arrayTask);
+}
+
+function rerenderTaskOnTable(arrayWithTasks){
     while (taskTable.firstChild) {
         taskTable.removeChild(taskTable.firstChild);
     }
-    arrayTask.forEach(task => {
+    arrayWithTasks.forEach(task => {
         addTaskToTable(task);
     });
 }
