@@ -19,6 +19,16 @@ class TaskList {
   }
 }
 
+class Storage {
+    constructor(){
+       this.TASK_ARRAY_KEY = "task";
+    }
+
+    saveTaskToLocalStorage(arrayTaskToAdd){
+        localStorage.setItem(this.TASK_ARRAY_KEY, JSON.stringify(arrayTaskToAdd));
+    }
+}
+
 class UI {
   constructor() {
     this.taskListTable = document.getElementById("task-table");
@@ -45,6 +55,7 @@ class UI {
 //-------------------------------------------------------
 let taskList = new TaskList();
 let uiHandler = new UI();
+let storageHandler = new Storage();
 
 var arrayTask = [];
 const filtersToApply = {
@@ -53,7 +64,6 @@ const filtersToApply = {
   oldestToNewest: true
 };
 var currentTaskId = 1;
-const form = document.getElementById("task-form");
 const taskTable = document.getElementById("task-table");
 const TASK_ARRAY_KEY = "task";
 
@@ -64,21 +74,19 @@ window.addEventListener("load", function(event) {
   document.getElementById("id").value = currentTaskId;
 
   if (localStorage.getItem(TASK_ARRAY_KEY) !== null) {
-    //revisamos
     arrayTask = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
     let lastHighestId = 0;
     arrayTask.forEach(task => {
       addTaskToTable(task);
       if (lastHighestId < task.id) lastHighestId = task.id;
     });
-    console.log("inicilizando IDS: " + lastHighestId);
     currentTaskId = Number(lastHighestId) + 1;
 
     document.getElementById("id").value = currentTaskId;
   }
 });
 
-form.addEventListener("submit", handleSubmit);
+document.getElementById("task-form").addEventListener("submit", handleSubmit);
 
 //interceptamos el el submit para extraer la data
 function handleSubmit(e) {
@@ -111,7 +119,6 @@ function validateForm() {
 
 //TODO REFACTORIZAR ESTE METODO CON TASK Y TASKLIST
 function addTask() {
-  let formChildren = Array.from(form.elements);
   let taskId = document.getElementById("id").value;
   let taskName = document.getElementById("task").value;
   let taskAsignee = document.getElementById("asignee").value;
@@ -120,21 +127,7 @@ function addTask() {
   let newTask = new Task(taskId, taskName, taskAsignee, taskStatus);
   taskList.createNewTask(newTask);
   uiHandler.addTaskToTable(newTask);
-
-  //   formChildren.forEach(element => {
-  //     if (element.type !== "submit") {
-  //       if (
-  //         element.type !== "checkbox" ||
-  //         (element.type === "checkbox" && element.checked)
-  //       )
-  //         newTask[element.name] = element.value;
-  //     }
-  //   });
-  //   newTask.creationDate = new Date();
-
-  //   arrayTask.push(newTask);
-  //   addTaskToLocalStore();
-  //   addTaskToTable(newTask);
+  storageHandler.addTaskToLocalStore(taskList.tasks);
 
   //Now that the task is added, we must update the currentId for new Tasks
   currentTaskId++;
