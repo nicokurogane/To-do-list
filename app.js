@@ -20,18 +20,38 @@ class TaskList {
 }
 
 class Storage {
-    constructor(){
-       this.TASK_ARRAY_KEY = "task";
-    }
+  constructor() {
+    this.TASK_ARRAY_KEY = "task";
+  }
 
-    saveTaskToLocalStorage(arrayTaskToAdd){
-        localStorage.setItem(this.TASK_ARRAY_KEY, JSON.stringify(arrayTaskToAdd));
-    }
+  saveTasksToLocalStorage(arrayTaskToAdd) {
+    localStorage.setItem(this.TASK_ARRAY_KEY, JSON.stringify(arrayTaskToAdd));
+  }
+
+  getTasksFromLocalStorage() {
+    if (localStorage.getItem(this.TASK_ARRAY_KEY) !== null)
+      return JSON.parse(localStorage.getItem(this.TASK_ARRAY_KEY));
+    else return null;
+  }
 }
 
 class UI {
   constructor() {
     this.taskListTable = document.getElementById("task-table");
+    this.formTaskId = document.getElementById("id");
+    this.currentTaskId = 1;
+  }
+
+  initForm(arrayTaskFromLocalStorage) {
+    if (arrayTaskFromLocalStorage !== null) {
+      let lastHighestId = 0;
+      arrayTaskFromLocalStorage.forEach(task => {
+        this.addTaskToTable(task);
+        if (lastHighestId < task.id) lastHighestId = task.id;
+      });
+      this.currentTaskId = Number(lastHighestId) + 1;
+    }
+    this.formTaskId.value = this.currentTaskId;
   }
 
   addTaskToTable(taskToAdd) {
@@ -50,9 +70,19 @@ class UI {
     tr.innerHTML = newRow;
     this.taskListTable.appendChild(tr);
   }
+
+  deleteTaskFromTable(taskIdToDelete) {
+    let rowToDelete = document.getElementById(`task${taskIdToDelete}`);
+    this.taskListTable.removeChild(rowToDelete);
+  }
+
+  updateTasksId() {
+    this.currentTaskId++;
+    this.formTaskId.value = this.currentTaskId;
+  }
 }
 
-//-------------------------------------------------------
+//-----------------------------------------------------------------------------------
 let taskList = new TaskList();
 let uiHandler = new UI();
 let storageHandler = new Storage();
@@ -63,27 +93,14 @@ const filtersToApply = {
   status: "",
   oldestToNewest: true
 };
-var currentTaskId = 1;
+
 const taskTable = document.getElementById("task-table");
 const TASK_ARRAY_KEY = "task";
 
 //inicializamos la pagina con los datos ya cargados
 window.addEventListener("load", function(event) {
-  console.log("Aqui vamos a cargar el ID");
-
-  document.getElementById("id").value = currentTaskId;
-
-  if (localStorage.getItem(TASK_ARRAY_KEY) !== null) {
-    arrayTask = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
-    let lastHighestId = 0;
-    arrayTask.forEach(task => {
-      addTaskToTable(task);
-      if (lastHighestId < task.id) lastHighestId = task.id;
-    });
-    currentTaskId = Number(lastHighestId) + 1;
-
-    document.getElementById("id").value = currentTaskId;
-  }
+  let arrayFromLocalStorage = storageHandler.getTasksFromLocalStorage();
+  uiHandler.initForm(arrayFromLocalStorage);
 });
 
 document.getElementById("task-form").addEventListener("submit", handleSubmit);
@@ -117,44 +134,17 @@ function validateForm() {
   return true;
 }
 
-//TODO REFACTORIZAR ESTE METODO CON TASK Y TASKLIST
 function addTask() {
   let taskId = document.getElementById("id").value;
   let taskName = document.getElementById("task").value;
   let taskAsignee = document.getElementById("asignee").value;
-  let taskStatus = document.getElementById("status").value;
+  let taskStatus = document.querySelector('input[name="status"]:checked').value;
 
   let newTask = new Task(taskId, taskName, taskAsignee, taskStatus);
   taskList.createNewTask(newTask);
   uiHandler.addTaskToTable(newTask);
-  storageHandler.addTaskToLocalStore(taskList.tasks);
-
-  //Now that the task is added, we must update the currentId for new Tasks
-  currentTaskId++;
-  document.getElementById("id").value = currentTaskId;
-}
-
-function addTaskToTable(taskToAdd) {
-  let newRow = `  <th scope="row">${taskToAdd.id}</th>
-                    <td>${taskToAdd.task}</td>
-                    <td>${taskToAdd.asignee}</td>
-                    <td>${taskToAdd.status}</td>
-                    <td>${new Date(taskToAdd.creationDate).toLocaleString(
-                      "es-SV"
-                    )}</td>
-                    <td>
-                      <button type="button" class="btn btn-danger" onclick="deleteTask(${
-                        taskToAdd.id
-                      })"> X </button>
-                    </td>`;
-  const tr = document.createElement("tr");
-  tr.id = `task${taskToAdd.id}`;
-  tr.innerHTML = newRow;
-  taskTable.appendChild(tr);
-}
-
-function addTaskToLocalStore() {
-  localStorage.setItem(TASK_ARRAY_KEY, JSON.stringify(arrayTask));
+  storageHandler.saveTasksToLocalStorage(taskList.tasks);
+  uiHandler.updateTasksId();
 }
 
 function deleteTaskFromLocalStore(idTaskToDelete) {
@@ -164,10 +154,12 @@ function deleteTaskFromLocalStore(idTaskToDelete) {
 }
 
 function deleteTask(idToDelete) {
-  arrayTask = arrayTask.filter(task => task.id != idToDelete);
-  let rowToDelete = document.getElementById(`task${idToDelete}`);
-  taskTable.removeChild(rowToDelete);
-  deleteTaskFromLocalStore(idToDelete);
+//   arrayTask = arrayTask.filter(task => task.id != idToDelete);
+//   let rowToDelete = document.getElementById(`task${idToDelete}`);
+//   taskTable.removeChild(rowToDelete);
+//   deleteTaskFromLocalStore(idToDelete);
+
+    uiHandler.deleteTaskFromTable(idToDelete);
 }
 
 //Filters
@@ -206,6 +198,7 @@ document.getElementById("sort-date").addEventListener("click", function(e) {
   filtersToApply.oldestToNewest = !filtersToApply.oldestToNewest;
 });
 
+//REFACTOR THIS FUNCTION LATER
 function resetTaskTableFromLocalStorage() {
   arrayTask = [];
   arrayTask = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
