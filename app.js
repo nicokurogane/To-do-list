@@ -17,6 +17,10 @@ class TaskList {
   createNewTask(newTask) {
     this.tasks.push(newTask);
   }
+
+  deleteTask(idTaskToDelete) {
+    this.tasks = this.tasks.filter(task => task.id != idToDelete);
+  }
 }
 
 class Storage {
@@ -26,6 +30,13 @@ class Storage {
 
   saveTasksToLocalStorage(arrayTaskToAdd) {
     localStorage.setItem(this.TASK_ARRAY_KEY, JSON.stringify(arrayTaskToAdd));
+  }
+
+  deleteTaskFromLocalStore(idTaskToDelete) {
+    let tempArray = this.getTasksFromLocalStorage();
+    if(tempArray === null) return;
+    tempArray = tempArray.filter(task => task.id != idTaskToDelete);
+    this.saveTasksToLocalStorage(tempArray);
   }
 
   getTasksFromLocalStorage() {
@@ -147,19 +158,20 @@ function addTask() {
   uiHandler.updateTasksId();
 }
 
-function deleteTaskFromLocalStore(idTaskToDelete) {
-  let tempArray = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
-  tempArray = tempArray.filter(task => task.id != idTaskToDelete);
-  localStorage.setItem(TASK_ARRAY_KEY, JSON.stringify(tempArray));
-}
+// function deleteTaskFromLocalStore(idTaskToDelete) {
+//   let tempArray = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
+//   tempArray = tempArray.filter(task => task.id != idTaskToDelete);
+//   localStorage.setItem(TASK_ARRAY_KEY, JSON.stringify(tempArray));
+// }
 
 function deleteTask(idToDelete) {
-//   arrayTask = arrayTask.filter(task => task.id != idToDelete);
-//   let rowToDelete = document.getElementById(`task${idToDelete}`);
-//   taskTable.removeChild(rowToDelete);
-//   deleteTaskFromLocalStore(idToDelete);
-
-    uiHandler.deleteTaskFromTable(idToDelete);
+  //   arrayTask = arrayTask.filter(task => task.id != idToDelete);
+  //   let rowToDelete = document.getElementById(`task${idToDelete}`);
+  //   taskTable.removeChild(rowToDelete);
+  //   deleteTaskFromLocalStore(idToDelete);
+  taskList.deleteTask(idToDelete);
+  uiHandler.deleteTaskFromTable(idToDelete);
+  storageHandler.deleteTaskFromLocalStore(idToDelete);
 }
 
 //Filters
