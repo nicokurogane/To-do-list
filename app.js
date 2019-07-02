@@ -37,8 +37,8 @@ class TaskList {
       this.tasks = this.tasks.filter(currentTask => currentTask.status.includes(this.filtersToApply.status));
   }
 
-  sortTasksByDate(){
-    this.tasks.sort( (taskA, taskB) => {
+  sortTasksByDate() {
+    this.tasks.sort((taskA, taskB) => {
       let dateA = new Date(taskA.creationDate);
       let dateB = new Date(taskB.creationDate);
       if (!this.filtersToApply.oldestToNewest) {
@@ -80,6 +80,7 @@ class UI {
   constructor() {
     this.taskListTable = document.getElementById("task-table");
     this.formTaskId = document.getElementById("id");
+    this.sortByDateButton = document.getElementById("sort-date");
     this.currentTaskId = 1;
   }
 
@@ -130,6 +131,14 @@ class UI {
     this.currentTaskId++;
     this.formTaskId.value = this.currentTaskId;
   }
+
+  changeSortByDateText(isOrderFromOldestToNewest) {
+    if (!isOrderFromOldestToNewest) {
+      this.sortByDateButton.value = "Sort by Date (Oldest First)";
+    } else {
+      this.sortByDateButton.value = "Sort by Date (Newest First)";
+    }
+  }
 }
 
 //-----------------------------------------------------------------------------------
@@ -154,7 +163,7 @@ function handleSubmit(e) {
   }
 }
 
-//devuelve false si el formulario no esta validado
+//TO-DO: SEPARATE THE VALIDATIONS TO A FILE CONTAINING EACH VALIDATION
 function validateForm() {
   let inputTaskValue = String(document.getElementById("task").value);
   if (inputTaskValue.length > 100 || inputTaskValue === "") {
@@ -208,14 +217,10 @@ document.getElementById("filter-status").addEventListener("change", function (e)
   rerenderFilteredTasks();
 });
 
-//TO-DO: PUT DOM MANIPULATION LOGIC ON OBJECT
+//DONE
 document.getElementById("sort-date").addEventListener("click", function (e) {
-  taskList.filtersToApply.oldestToNewest =  !taskList.filtersToApply.oldestToNewest;
-  if (!taskList.filtersToApply.oldestToNewest) {
-    document.getElementById("sort-date").value = "Sort by Date (Oldest First)";
-  } else {
-    document.getElementById("sort-date").value = "Sort by Date (Newest First)";
-  }
+  taskList.filtersToApply.oldestToNewest = !taskList.filtersToApply.oldestToNewest;
+  uiHandler.changeSortByDateText(taskList.filtersToApply.oldestToNewest);
   rerenderFilteredTasks();
 });
 
