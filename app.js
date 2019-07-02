@@ -12,6 +12,11 @@ class Task {
 class TaskList {
   constructor() {
     this.tasks = [];
+    this.filtersToApply = {
+      task: "",
+      status: "",
+      oldestToNewest: true
+    };
   }
 
   createNewTask(newTask) {
@@ -19,7 +24,32 @@ class TaskList {
   }
 
   deleteTask(idTaskToDelete) {
-    this.tasks = this.tasks.filter(task => task.id != idToDelete);
+    this.tasks = this.tasks.filter(task => task.id != idTaskToDelete);
+  }
+
+  searchTasksByName() {
+    if (this.filtersToApply.task !== '')
+      this.tasks = this.tasks.filter(currentTask => currentTask.name.includes(this.filtersToApply.task));
+  }
+
+  filterTasksByStatus() {
+    if (this.filtersToApply.status !== '')
+      this.tasks = this.tasks.filter(currentTask => currentTask.status.includes(this.filtersToApply.status));
+  }
+
+  sortTasksByDate(){
+    this.tasks.sort( (taskA, taskB) => {
+      let dateA = new Date(taskA.creationDate);
+      let dateB = new Date(taskB.creationDate);
+      if (!this.filtersToApply.oldestToNewest) {
+        if (dateA > dateB) return -1;
+        if (dateA < dateB) return 1;
+      } else {
+        if (dateA < dateB) return -1;
+        if (dateA > dateB) return 1;
+      }
+      return 0;
+    });
   }
 }
 
@@ -34,7 +64,7 @@ class Storage {
 
   deleteTaskFromLocalStore(idTaskToDelete) {
     let tempArray = this.getTasksFromLocalStorage();
-    if(tempArray === null) return;
+    if (tempArray === null) return;
     tempArray = tempArray.filter(task => task.id != idTaskToDelete);
     this.saveTasksToLocalStorage(tempArray);
   }
@@ -73,8 +103,8 @@ class UI {
         <td>${new Date(taskToAdd.creationDate).toLocaleString("es-SV")}</td>
         <td>
           <button type="button" class="btn btn-danger" onclick="deleteTask(${
-            taskToAdd.id
-          })"> X </button>
+      taskToAdd.id
+      })"> X </button>
         </td>`;
     const tr = document.createElement("tr");
     tr.id = `task${taskToAdd.id}`;
@@ -85,6 +115,15 @@ class UI {
   deleteTaskFromTable(taskIdToDelete) {
     let rowToDelete = document.getElementById(`task${taskIdToDelete}`);
     this.taskListTable.removeChild(rowToDelete);
+  }
+
+  rerenderTaskOnTable(arrayWithTasks) {
+    while (this.taskListTable.firstChild) {
+      this.taskListTable.removeChild(this.taskListTable.firstChild);
+    }
+    arrayWithTasks.forEach(task => {
+      this.addTaskToTable(task);
+    });
   }
 
   updateTasksId() {
@@ -98,18 +137,9 @@ let taskList = new TaskList();
 let uiHandler = new UI();
 let storageHandler = new Storage();
 
-var arrayTask = [];
-const filtersToApply = {
-  task: "",
-  status: "",
-  oldestToNewest: true
-};
-
-const taskTable = document.getElementById("task-table");
-const TASK_ARRAY_KEY = "task";
 
 //inicializamos la pagina con los datos ya cargados
-window.addEventListener("load", function(event) {
+window.addEventListener("load", function (event) {
   let arrayFromLocalStorage = storageHandler.getTasksFromLocalStorage();
   uiHandler.initForm(arrayFromLocalStorage);
 });
@@ -145,6 +175,7 @@ function validateForm() {
   return true;
 }
 
+//DONE
 function addTask() {
   let taskId = document.getElementById("id").value;
   let taskName = document.getElementById("task").value;
@@ -158,95 +189,43 @@ function addTask() {
   uiHandler.updateTasksId();
 }
 
-// function deleteTaskFromLocalStore(idTaskToDelete) {
-//   let tempArray = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
-//   tempArray = tempArray.filter(task => task.id != idTaskToDelete);
-//   localStorage.setItem(TASK_ARRAY_KEY, JSON.stringify(tempArray));
-// }
-
+//DONE
 function deleteTask(idToDelete) {
-  //   arrayTask = arrayTask.filter(task => task.id != idToDelete);
-  //   let rowToDelete = document.getElementById(`task${idToDelete}`);
-  //   taskTable.removeChild(rowToDelete);
-  //   deleteTaskFromLocalStore(idToDelete);
   taskList.deleteTask(idToDelete);
   uiHandler.deleteTaskFromTable(idToDelete);
   storageHandler.deleteTaskFromLocalStore(idToDelete);
 }
 
-//Filters
-document.getElementById("filter-text").addEventListener("keyup", function(e) {
-  filtersToApply.task = e.target.value;
+//Filters - DONE
+document.getElementById("filter-text").addEventListener("keyup", function (e) {
+  taskList.filtersToApply.task = e.target.value;
   rerenderFilteredTasks();
 });
 
-document
-  .getElementById("filter-status")
-  .addEventListener("change", function(e) {
-    filtersToApply.status = e.target.value;
-    rerenderFilteredTasks();
-  });
+//DONE
+document.getElementById("filter-status").addEventListener("change", function (e) {
+  taskList.filtersToApply.status = e.target.value;
+  rerenderFilteredTasks();
+});
 
-document.getElementById("sort-date").addEventListener("click", function(e) {
-  if (filtersToApply.oldestToNewest) {
+//TO-DO: PUT DOM MANIPULATION LOGIC ON OBJECT
+document.getElementById("sort-date").addEventListener("click", function (e) {
+  taskList.filtersToApply.oldestToNewest =  !taskList.filtersToApply.oldestToNewest;
+  if (!taskList.filtersToApply.oldestToNewest) {
     document.getElementById("sort-date").value = "Sort by Date (Oldest First)";
   } else {
     document.getElementById("sort-date").value = "Sort by Date (Newest First)";
   }
-
-  arrayTask.sort(function(a, b) {
-    let dateA = new Date(a.creationDate);
-    let dateB = new Date(b.creationDate);
-    if (filtersToApply.oldestToNewest) {
-      if (dateA > dateB) return -1;
-      if (dateA < dateB) return 1;
-    } else {
-      if (dateA < dateB) return -1;
-      if (dateA > dateB) return 1;
-    }
-    return 0;
-  });
-  rerenderTaskOnTable(arrayTask);
-  filtersToApply.oldestToNewest = !filtersToApply.oldestToNewest;
+  rerenderFilteredTasks();
 });
 
-//REFACTOR THIS FUNCTION LATER
-function resetTaskTableFromLocalStorage() {
-  arrayTask = [];
-  arrayTask = JSON.parse(localStorage.getItem(TASK_ARRAY_KEY));
-  rerenderTaskOnTable(arrayTask);
-}
 
-function rerenderTaskOnTable(arrayWithTasks) {
-  while (taskTable.firstChild) {
-    taskTable.removeChild(taskTable.firstChild);
-  }
-  arrayWithTasks.forEach(task => {
-    addTaskToTable(task);
-  });
-}
-
+//DONE
 function rerenderFilteredTasks() {
-  resetTaskTableFromLocalStorage();
-  if (filtersToApply.task !== "")
-    arrayTask = arrayTask.filter(element =>
-      element["task"].includes(filtersToApply.task)
-    );
-  if (filtersToApply.status !== "")
-    arrayTask = arrayTask.filter(element =>
-      element["status"].includes(filtersToApply.status)
-    );
-  arrayTask.sort(function(a, b) {
-    let dateA = new Date(a.creationDate);
-    let dateB = new Date(b.creationDate);
-    if (!filtersToApply.oldestToNewest) {
-      if (dateA > dateB) return -1;
-      if (dateA < dateB) return 1;
-    } else {
-      if (dateA < dateB) return -1;
-      if (dateA > dateB) return 1;
-    }
-    return 0;
-  });
-  rerenderTaskOnTable(arrayTask);
+  taskList.tasks = [];
+  taskList.tasks = storageHandler.getTasksFromLocalStorage();
+  taskList.searchTasksByName();
+  taskList.filterTasksByStatus();
+  taskList.sortTasksByDate();
+  uiHandler.rerenderTaskOnTable(taskList.tasks);
 }
