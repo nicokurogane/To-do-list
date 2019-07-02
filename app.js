@@ -27,14 +27,31 @@ class TaskList {
     this.tasks = this.tasks.filter(task => task.id != idTaskToDelete);
   }
 
+  getTaskById(taskIdToFind) {
+    return this.tasks.find(task => task.id == taskIdToFind);
+  }
+
+  putEditedTask(editedTaskToEnter) {
+    let taskToReplace = this.getTaskById(editedTaskToEnter.id);
+    let index = this.tasks.indexOf(taskToReplace);
+
+    if (index !== -1) {
+      this.tasks[index] = editedTaskToEnter;
+    }
+  }
+
   searchTasksByName() {
-    if (this.filtersToApply.task !== '')
-      this.tasks = this.tasks.filter(currentTask => currentTask.name.includes(this.filtersToApply.task));
+    if (this.filtersToApply.task !== "")
+      this.tasks = this.tasks.filter(currentTask =>
+        currentTask.name.includes(this.filtersToApply.task)
+      );
   }
 
   filterTasksByStatus() {
-    if (this.filtersToApply.status !== '')
-      this.tasks = this.tasks.filter(currentTask => currentTask.status.includes(this.filtersToApply.status));
+    if (this.filtersToApply.status !== "")
+      this.tasks = this.tasks.filter(currentTask =>
+        currentTask.status.includes(this.filtersToApply.status)
+      );
   }
 
   sortTasksByDate() {
@@ -104,8 +121,11 @@ class UI {
         <td>${new Date(taskToAdd.creationDate).toLocaleString("es-SV")}</td>
         <td>
           <button type="button" class="btn btn-danger" onclick="deleteTask(${
-      taskToAdd.id
-      })"> X </button>
+            taskToAdd.id
+          })"> X </button>
+          <button type="button" class="btn btn-success" onclick="setTaskToEdit(${
+            taskToAdd.id
+          })"> Edit </button>
         </td>`;
     const tr = document.createElement("tr");
     tr.id = `task${taskToAdd.id}`;
@@ -139,6 +159,34 @@ class UI {
       this.sortByDateButton.value = "Sort by Date (Newest First)";
     }
   }
+
+  showTaskDataOnEditForm(taskToEdit) {
+    document.getElementById("edit-id").value = taskToEdit.id;
+    document.getElementById("edit-task").value = taskToEdit.name;
+    document.getElementById("edit-asignee").value = taskToEdit.asignee;
+    document.getElementById("edit-creation-date").value =
+      taskToEdit.creationDate;
+    //seteamos el elemento que esta elejido
+    let editStatusCheckBox = document.querySelectorAll(
+      'input[name="edit-status"]'
+    );
+    editStatusCheckBox.forEach(element => (element.checked = false));
+    editStatusCheckBox.forEach(element => {
+      if (element.value === taskToEdit.status) {
+        element.checked = true;
+        return;
+      }
+    });
+  }
+
+  getEditedTask() {
+    let id = document.getElementById("edit-id").value;
+    let name = document.getElementById("edit-task").value;
+    let asignee = document.getElementById("edit-asignee").value;
+    let status = document.querySelector('input[name="edit-status"]:checked').value;
+    let creationDate = document.getElementById("edit-creation-date").value;
+    return new Task(id, name, asignee, status, new Date(creationDate));
+  }
 }
 
 //-----------------------------------------------------------------------------------
@@ -146,10 +194,10 @@ let taskList = new TaskList();
 let uiHandler = new UI();
 let storageHandler = new Storage();
 
-
 //inicializamos la pagina con los datos ya cargados
-window.addEventListener("load", function (event) {
+window.addEventListener("load", function(event) {
   let arrayFromLocalStorage = storageHandler.getTasksFromLocalStorage();
+  taskList.tasks = arrayFromLocalStorage;
   uiHandler.initForm(arrayFromLocalStorage);
 });
 
@@ -161,6 +209,16 @@ function handleSubmit(e) {
   if (validateForm()) {
     addTask();
   }
+}
+
+document
+  .getElementById("edit-task-form")
+  .addEventListener("submit", handleEditSubmit);
+
+function handleEditSubmit(e) {
+  e.preventDefault();
+  //TODO: PONER VALIDACION TO EDIT
+  editTask();
 }
 
 //TO-DO: SEPARATE THE VALIDATIONS TO A FILE CONTAINING EACH VALIDATION
@@ -205,25 +263,41 @@ function deleteTask(idToDelete) {
   storageHandler.deleteTaskFromLocalStore(idToDelete);
 }
 
-//Filters - DONE
-document.getElementById("filter-text").addEventListener("keyup", function (e) {
+// edit function
+function setTaskToEdit(taskIdToEdit) {
+  $("#modal-edit-task").modal("show"); //VALIDAR ESTO CON GERARDO
+  taskToEdit = taskList.getTaskById(taskIdToEdit);
+  uiHandler.showTaskDataOnEditForm(taskToEdit);
+}
+
+function editTask() {
+  let editedTask = uiHandler.getEditedTask();
+  taskList.putEditedTask(editedTask);
+  storageHandler.saveTasksToLocalStorage(taskList.tasks);
+  uiHandler.rerenderTaskOnTable(taskList.tasks);
+  $("#modal-edit-task").modal('hide');
+}
+//'''''''''''''''''''''''''''''''''Filters'''''''''''''''''''''''''''''''''''''  DONE
+document.getElementById("filter-text").addEventListener("keyup", function(e) {
   taskList.filtersToApply.task = e.target.value;
   rerenderFilteredTasks();
 });
 
 //DONE
-document.getElementById("filter-status").addEventListener("change", function (e) {
-  taskList.filtersToApply.status = e.target.value;
-  rerenderFilteredTasks();
-});
+document
+  .getElementById("filter-status")
+  .addEventListener("change", function(e) {
+    taskList.filtersToApply.status = e.target.value;
+    rerenderFilteredTasks();
+  });
 
 //DONE
-document.getElementById("sort-date").addEventListener("click", function (e) {
-  taskList.filtersToApply.oldestToNewest = !taskList.filtersToApply.oldestToNewest;
+document.getElementById("sort-date").addEventListener("click", function(e) {
+  taskList.filtersToApply.oldestToNewest = !taskList.filtersToApply
+    .oldestToNewest;
   uiHandler.changeSortByDateText(taskList.filtersToApply.oldestToNewest);
   rerenderFilteredTasks();
 });
-
 
 //DONE
 function rerenderFilteredTasks() {
