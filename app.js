@@ -22,9 +22,7 @@ function handleSubmit(e) {
   }
 }
 
-document
-  .getElementById("edit-task-form")
-  .addEventListener("submit", handleEditSubmit);
+document.getElementById("edit-task-form").addEventListener("submit", handleEditSubmit);
 
 function handleEditSubmit(e) {
   e.preventDefault();
@@ -32,15 +30,23 @@ function handleEditSubmit(e) {
   editTask();
 }
 
+document.getElementById("delete-task-button").addEventListener("click", e => {
+  let idToDelete = document.getElementById("delete-task-id").innerText;
+  deleteTask(idToDelete);
+  $("#confirm-delete-modal").modal("hide");
+});
+
 //TO-DO: REFACTOR SO UI CLASS IS THE ONE MANIPULATING THE DOM
 function validateForm() {
-  hideInvalidMessages(["task-invalid","status-invalid"]);
+  hideInvalidMessages(["task-invalid", "status-invalid"]);
   let numberOfInvalids = 0;
   let inputTaskValue = document.getElementById("task").value;
-  if (
-    Validator.isStringAboveLengthLimit(100, inputTaskValue) ||
-    Validator.isStringEmpty(inputTaskValue)
-  ) {
+  if (Validator.isStringAboveLengthLimit(100, inputTaskValue)) {
+    showInvalidMessage("task-invalid");
+    numberOfInvalids++;
+  }
+
+  if (Validator.isStringEmpty(inputTaskValue)) {
     showInvalidMessage("task-invalid");
     numberOfInvalids++;
   }
@@ -81,6 +87,11 @@ function deleteTask(idToDelete) {
   taskList.deleteTask(idToDelete);
   uiHandler.deleteTaskFromTable(idToDelete);
   storageHandler.deleteTaskFromLocalStore(idToDelete);
+}
+
+function confirmDeleteTask(idToDelete) {
+  $("#confirm-delete-modal").modal("show");
+  document.getElementById("delete-task-id").innerText = idToDelete;
 }
 
 function setTaskToEdit(taskIdToEdit) {

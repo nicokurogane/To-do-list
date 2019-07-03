@@ -32,7 +32,7 @@ class UI {
           <td>${taskToAdd.status}</td>
           <td>${new Date(taskToAdd.creationDate).toLocaleString("es-SV")}</td>
           <td>
-            <button type="button" class="btn btn-danger" onclick="deleteTask(${
+            <button type="button" class="btn btn-danger" onclick="confirmDeleteTask(${
               taskToAdd.id
             })"> X </button>
             <button type="button" class="btn btn-success" onclick="setTaskToEdit(${
@@ -95,7 +95,8 @@ class UI {
     let id = document.getElementById("edit-id").value;
     let name = document.getElementById("edit-task").value;
     let asignee = document.getElementById("edit-asignee").value;
-    let status = document.querySelector('input[name="edit-status"]:checked').value;
+    let status = document.querySelector('input[name="edit-status"]:checked')
+      .value;
     let creationDate = document.getElementById("edit-creation-date").value;
     return new Task(id, name, asignee, status, new Date(creationDate));
   }

@@ -53,8 +53,9 @@
 .err-msg{
     color: #BD2424;
     font-size: 0.85em;
+    transition: all 0.2s ease-in-out;   
 }
 
 .hide-message{
-    visibility: hidden;
+    opacity: 0;
 }
