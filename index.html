@@ -12,42 +12,45 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-dark navbar-color">
+        <span class="navbar-brand mb-0 h1">Todo-List</span>
+    </nav>
     <div class="form-container">
-        <h1>TO-DO LIST</h1>
         <div class="card">
             <div class="card-body">
-                    <form id="task-form">
-                            <input type="hidden" id="id" name="id" />
-                            <div class="form-component form-group">
-                                <label for="task">Task</label>
-                                <input id="task" name="task" class="form-control" placeholder="Task To Add" />
-                                <span id="task-invalid" class="hide-message err-msg">
-                                    Task musn't be longer than 100 characters nor can't be empty</span>
+                <form id="task-form">
+                    <input type="hidden" id="id" name="id" />
+                    <div class="form-component form-group">
+                        <label for="task">Task</label>
+                        <input id="task" name="task" class="form-control" placeholder="Task To Add" />
+                        <span id="task-invalid" class="hide-message err-msg">
+                            Task musn't be longer than 100 characters nor can't be empty</span>
+                    </div>
+                    <div class="form-component form-group ">
+                        <label for="asignee">Asignee</label>
+                        <select id="asignee" name="asignee" class="browser-default custom-select">
+                            <option value="Frank">Frank</option>
+                            <option value="John">John</option>
+                            <option value="Alice">Alice</option>
+                            <option value="Mary">Mary</option>
+                        </select>
+                    </div>
+                    <div class="form-component form-group">
+                        <label for="status">Status: </label>
+                        <div class="status-select">
+                            <div> <input type="checkbox" class="required-input" id="status" name="status"
+                                    value="Pending" />Pending</div>
+                            <div> <input type="checkbox" class="required-input" id="status" name="status"
+                                    value="Done" />Done
                             </div>
-                            <div class="form-component form-group ">
-                                <label for="asignee">Asignee</label>
-                                <select id="asignee" name="asignee" class="browser-default custom-select">
-                                    <option value="Frank">Frank</option>
-                                    <option value="John">John</option>
-                                    <option value="Alice">Alice</option>
-                                    <option value="Mary">Mary</option>
-                                </select>
-                            </div>
-                            <div class="form-component form-group">
-                                <label for="status">Status: </label>
-                                <div class="status-select">
-                                    <div> <input type="checkbox" class="required-input" id="status" name="status"
-                                            value="Pending" />Pending</div>
-                                    <div> <input type="checkbox" class="required-input" id="status" name="status" value="Done" />Done
-                                    </div>
-                                </div>
-                                <span id="status-invalid" class="hide-message err-msg">Must select one status</span>
-                            </div>
-                            <input type="submit" class="btn btn-primary" value="Add Task" />
-                        </form>
+                        </div>
+                        <span id="status-invalid" class="hide-message err-msg">Must select one status</span>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Add Task" />
+                </form>
             </div>
         </div>
-       
+
     </div>
     <!-- TASK ADDED and filter-->
 
