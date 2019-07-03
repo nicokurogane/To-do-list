@@ -34,19 +34,13 @@ function handleEditSubmit(e) {
 
 //TO-DO: SEPARATE THE VALIDATIONS TO A FILE CONTAINING EACH VALIDATION
 function validateForm() {
-  let inputTaskValue = String(document.getElementById("task").value);
-  if (inputTaskValue.length > 100 || inputTaskValue === "") {
+  let inputTaskValue = document.getElementById("task").value;
+  if ( Validator.isStringAboveLengthLimit(100, inputTaskValue) || Validator.isStringEmpty(inputTaskValue)) {
     alert(`Task musn't be longer than 100 characters and can't be null.`);
     return false;
   }
 
-  let statusInputsArray = Array.from(document.getElementsByName("status"));
-  let numberOfChecked = 0;
-  statusInputsArray.forEach(checkbox => {
-    numberOfChecked += checkbox.checked ? 1 : 0;
-  });
-
-  if (numberOfChecked !== 1) {
+  if (Validator.isOnlyOneCheckBoxSelected(document.getElementsByName("status"))) {
     alert("you must select 1 status condition.");
     return false;
   }
