@@ -32,19 +32,36 @@ function handleEditSubmit(e) {
   editTask();
 }
 
-//TO-DO: SEPARATE THE VALIDATIONS TO A FILE CONTAINING EACH VALIDATION
+//TO-DO: REFACTOR SO UI CLASS IS THE ONE MANIPULATING THE DOM
 function validateForm() {
+  hideInvalidMessages(["task-invalid","status-invalid"]);
+  let numberOfInvalids = 0;
   let inputTaskValue = document.getElementById("task").value;
-  if ( Validator.isStringAboveLengthLimit(100, inputTaskValue) || Validator.isStringEmpty(inputTaskValue)) {
-    alert(`Task musn't be longer than 100 characters and can't be null.`);
-    return false;
+  if (
+    Validator.isStringAboveLengthLimit(100, inputTaskValue) ||
+    Validator.isStringEmpty(inputTaskValue)
+  ) {
+    showInvalidMessage("task-invalid");
+    numberOfInvalids++;
   }
 
-  if (Validator.isOnlyOneCheckBoxSelected(document.getElementsByName("status"))) {
-    alert("you must select 1 status condition.");
-    return false;
+  if (
+    Validator.isOnlyOneCheckBoxSelected(document.getElementsByName("status"))
+  ) {
+    showInvalidMessage("status-invalid");
+    numberOfInvalids++;
   }
-  return true;
+  return numberOfInvalids === 0;
+}
+
+function showInvalidMessage(targetSpan) {
+  document.getElementById(targetSpan).classList.remove("hide-message");
+}
+
+function hideInvalidMessages(targetSpan) {
+  targetSpan.forEach(span => {
+    document.getElementById(span).classList.add("hide-message");
+  });
 }
 
 function addTask() {
@@ -80,7 +97,7 @@ function editTask() {
   $("#modal-edit-task").modal("hide");
 }
 
-//'''''''''''''''''''''''''''''''''Filters'''''''''''''''''''''''''''''''''''''  DONE
+//'''''''''''''''''''''''''''''''''Filters'''''''''''''''''''''''''''''''''''''
 document.getElementById("filter-text").addEventListener("keyup", function(e) {
   taskList.filtersToApply.task = e.target.value;
   rerenderFilteredTasks();
