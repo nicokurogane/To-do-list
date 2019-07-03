@@ -1,5 +1,4 @@
-//TODO: pasa luego a un archivo
-
+//TODO: HACER LOS IMPORT DE LAS CLASES
 
 //-----------------------------------------------------------------------------------
 let taskList = new TaskList();
@@ -23,7 +22,9 @@ function handleSubmit(e) {
   }
 }
 
-document.getElementById("edit-task-form").addEventListener("submit", handleEditSubmit);
+document
+  .getElementById("edit-task-form")
+  .addEventListener("submit", handleEditSubmit);
 
 function handleEditSubmit(e) {
   e.preventDefault();
@@ -52,7 +53,6 @@ function validateForm() {
   return true;
 }
 
- 
 function addTask() {
   let taskId = document.getElementById("id").value;
   let taskName = document.getElementById("task").value;
@@ -66,7 +66,6 @@ function addTask() {
   uiHandler.updateTasksId();
 }
 
- 
 function deleteTask(idToDelete) {
   taskList.deleteTask(idToDelete);
   uiHandler.deleteTaskFromTable(idToDelete);
@@ -84,7 +83,7 @@ function editTask() {
   taskList.putEditedTask(editedTask);
   storageHandler.saveTasksToLocalStorage(taskList.tasks);
   uiHandler.rerenderTaskOnTable(taskList.tasks);
-  $("#modal-edit-task").modal('hide');
+  $("#modal-edit-task").modal("hide");
 }
 
 //'''''''''''''''''''''''''''''''''Filters'''''''''''''''''''''''''''''''''''''  DONE
@@ -93,20 +92,20 @@ document.getElementById("filter-text").addEventListener("keyup", function(e) {
   rerenderFilteredTasks();
 });
 
- 
-document.getElementById("filter-status").addEventListener("change", function(e) {
+document
+  .getElementById("filter-status")
+  .addEventListener("change", function(e) {
     taskList.filtersToApply.status = e.target.value;
     rerenderFilteredTasks();
   });
 
- 
 document.getElementById("sort-date").addEventListener("click", function(e) {
-  taskList.filtersToApply.oldestToNewest = !taskList.filtersToApply.oldestToNewest;
+  taskList.filtersToApply.oldestToNewest = !taskList.filtersToApply
+    .oldestToNewest;
   uiHandler.changeSortByDateText(taskList.filtersToApply.oldestToNewest);
   rerenderFilteredTasks();
 });
 
- 
 function rerenderFilteredTasks() {
   taskList.tasks = [];
   taskList.tasks = storageHandler.getTasksFromLocalStorage();
