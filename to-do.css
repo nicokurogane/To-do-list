@@ -17,7 +17,7 @@
 }
 
 .form-container{
-    margin-bottom: 15vh;
+    margin-bottom: 10vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -29,7 +29,7 @@
 }
 
 .filter-container{
-    margin:  6vh 20vw;
+    margin:  6vh 9vw;
     display: flex;
     justify-content: space-around;
     align-items: center;
