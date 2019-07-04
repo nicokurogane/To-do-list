@@ -76,8 +76,7 @@ class UI {
     document.getElementById("edit-id").value = taskToEdit.id;
     document.getElementById("edit-task").value = taskToEdit.name;
     document.getElementById("edit-asignee").value = taskToEdit.asignee;
-    document.getElementById("edit-creation-date").value =
-      taskToEdit.creationDate;
+    document.getElementById("edit-creation-date").value = taskToEdit.creationDate;
     //seteamos el elemento que esta elejido
     let editStatusCheckBox = document.querySelectorAll(
       'input[name="edit-status"]'
@@ -95,8 +94,7 @@ class UI {
     let id = document.getElementById("edit-id").value;
     let name = document.getElementById("edit-task").value;
     let asignee = document.getElementById("edit-asignee").value;
-    let status = document.querySelector('input[name="edit-status"]:checked')
-      .value;
+    let status = document.querySelector('input[name="edit-status"]:checked').value;
     let creationDate = document.getElementById("edit-creation-date").value;
     return new Task(id, name, asignee, status, new Date(creationDate));
   }

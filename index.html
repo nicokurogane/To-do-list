@@ -96,7 +96,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title">Edit Task</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -109,6 +109,8 @@
                         <div class="form-component form-group">
                             <label for="edit-task">Task</label>
                             <input id="edit-task" name="edit-task" class="form-control" placeholder="Task To edit" />
+                            <span id="edit-task-invalid" class="hide-message err-msg">
+                                Task musn't be longer than 100 characters nor can't be empty</span>
                         </div>
                         <div class="form-component form-group">
                             <label for="edit-asignee">Asignee</label>
@@ -128,6 +130,7 @@
                                         name="edit-status" value="Done" />Done
                                 </div>
                             </div>
+                            <span id="edit-status-invalid" class="hide-message  err-msg">Must select one status</span>
                         </div>
                 </div>
                 <div class="modal-footer">

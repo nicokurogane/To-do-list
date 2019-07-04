@@ -17,17 +17,26 @@ document.getElementById("task-form").addEventListener("submit", handleSubmit);
 //interceptamos el el submit para extraer la data
 function handleSubmit(e) {
   e.preventDefault();
-  if (validateForm()) {
+  if (validateForm(["task-invalid", "status-invalid"], "task", "status")) {
     addTask();
   }
 }
 
-document.getElementById("edit-task-form").addEventListener("submit", handleEditSubmit);
+document
+  .getElementById("edit-task-form")
+  .addEventListener("submit", handleEditSubmit);
 
 function handleEditSubmit(e) {
   e.preventDefault();
-  //TODO: PONER VALIDACION TO EDIT
-  editTask();
+  if (
+    validateForm(
+      ["edit-task-invalid", "edit-status-invalid"],
+      "edit-task",
+      "edit-status"
+    )
+  ) {
+    editTask();
+  }
 }
 
 document.getElementById("delete-task-button").addEventListener("click", e => {
@@ -36,25 +45,23 @@ document.getElementById("delete-task-button").addEventListener("click", e => {
   $("#confirm-delete-modal").modal("hide");
 });
 
-//TO-DO: REFACTOR SO UI CLASS IS THE ONE MANIPULATING THE DOM
-function validateForm() {
-  hideInvalidMessages(["task-invalid", "status-invalid"]);
+function validateForm(messageLabels, taskNameInputId, statusInputId) {
+  hideInvalidMessages(messageLabels);
   let numberOfInvalids = 0;
-  let inputTaskValue = document.getElementById("task").value;
+  let inputTaskValue = document.getElementById(taskNameInputId).value;
+
   if (Validator.isStringAboveLengthLimit(100, inputTaskValue)) {
-    showInvalidMessage("task-invalid");
+    showInvalidMessage(messageLabels[0]);
     numberOfInvalids++;
   }
 
   if (Validator.isStringEmpty(inputTaskValue)) {
-    showInvalidMessage("task-invalid");
+    showInvalidMessage(messageLabels[0]);
     numberOfInvalids++;
   }
 
-  if (
-    Validator.isOnlyOneCheckBoxSelected(document.getElementsByName("status"))
-  ) {
-    showInvalidMessage("status-invalid");
+  if ( Validator.isOnlyOneCheckBoxSelected( document.getElementsByName(statusInputId)) ) {
+    showInvalidMessage(messageLabels[1]);
     numberOfInvalids++;
   }
   return numberOfInvalids === 0;
@@ -95,7 +102,7 @@ function confirmDeleteTask(idToDelete) {
 }
 
 function setTaskToEdit(taskIdToEdit) {
-  $("#modal-edit-task").modal("show"); //VALIDAR ESTO CON GERARDO
+  $("#modal-edit-task").modal("show");
   taskToEdit = taskList.getTaskById(taskIdToEdit);
   uiHandler.showTaskDataOnEditForm(taskToEdit);
 }
@@ -114,16 +121,13 @@ document.getElementById("filter-text").addEventListener("keyup", function(e) {
   rerenderFilteredTasks();
 });
 
-document
-  .getElementById("filter-status")
-  .addEventListener("change", function(e) {
+document.getElementById("filter-status").addEventListener("change", function(e) {
     taskList.filtersToApply.status = e.target.value;
     rerenderFilteredTasks();
   });
 
 document.getElementById("sort-date").addEventListener("click", function(e) {
-  taskList.filtersToApply.oldestToNewest = !taskList.filtersToApply
-    .oldestToNewest;
+  taskList.filtersToApply.oldestToNewest = !taskList.filtersToApply.oldestToNewest;
   uiHandler.changeSortByDateText(taskList.filtersToApply.oldestToNewest);
   rerenderFilteredTasks();
 });
