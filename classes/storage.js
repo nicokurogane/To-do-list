@@ -17,6 +17,6 @@ class Storage {
     getTasksFromLocalStorage() {
       if (localStorage.getItem(this.TASK_ARRAY_KEY) !== null)
         return JSON.parse(localStorage.getItem(this.TASK_ARRAY_KEY));
-      else return null;
+      else return [];
     }
   }

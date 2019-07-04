@@ -1,13 +1,11 @@
-//TODO: HACER LOS IMPORT DE LAS CLASES
-
-//-----------------------------------------------------------------------------------
-let taskList = new TaskList();
-let uiHandler = new UI();
 let storageHandler = new Storage();
+let taskList = new TaskList(storageHandler);
+let uiHandler = new UI();
+
 
 //inicializamos la pagina con los datos ya cargados
 window.addEventListener("load", function(event) {
-  let arrayFromLocalStorage = storageHandler.getTasksFromLocalStorage();
+  let arrayFromLocalStorage = taskList.getTaskList();
   taskList.tasks = arrayFromLocalStorage;
   uiHandler.initForm(arrayFromLocalStorage);
 });
@@ -72,7 +70,7 @@ function addTask() {
   let taskName = document.getElementById("task").value;
   let taskAsignee = document.getElementById("asignee").value;
   let taskStatus = document.querySelector('input[name="status"]:checked').value;
-
+  
   let newTask = new Task(taskId, taskName, taskAsignee, taskStatus);
   taskList.createNewTask(newTask);
   uiHandler.addTaskToTable(newTask);

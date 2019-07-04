@@ -7,7 +7,7 @@ class UI {
   }
 
   initForm(arrayTaskFromLocalStorage) {
-    if (arrayTaskFromLocalStorage !== null) {
+    if (arrayTaskFromLocalStorage !== null ) {
       let lastHighestId = 0;
       arrayTaskFromLocalStorage.forEach(task => {
         this.addTaskToTable(task);
@@ -15,6 +15,7 @@ class UI {
       });
       this.currentTaskId = Number(lastHighestId) + 1;
     }
+
     this.formTaskId.value = this.currentTaskId;
 
     this.setFormCheckBoxesBehavoir(

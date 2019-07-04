@@ -1,11 +1,16 @@
 class TaskList {
-    constructor() {
+    constructor(storageHandler = new Storage()) {
       this.tasks = [];
+      this.storageHandler = storageHandler;
       this.filtersToApply = {
         task: "",
         status: "",
         oldestToNewest: true
       };
+    }
+
+    getTaskList(){
+      return this.storageHandler.getTasksFromLocalStorage();
     }
   
     createNewTask(newTask) {
