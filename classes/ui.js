@@ -112,4 +112,15 @@ class UI {
       });
     });
   }
+
+  showInvalidMessage(targetSpan) {
+    document.getElementById(targetSpan).classList.remove("hide-message");
+  }
+  
+  hideInvalidMessages(targetSpan) {
+    targetSpan.forEach(span => {
+      document.getElementById(span).classList.add("hide-message");
+    });
+  }
+
 }

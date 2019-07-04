@@ -46,35 +46,25 @@ document.getElementById("delete-task-button").addEventListener("click", e => {
 });
 
 function validateForm(messageLabels, taskNameInputId, statusInputId) {
-  hideInvalidMessages(messageLabels);
+  uiHandler.hideInvalidMessages(messageLabels);
   let numberOfInvalids = 0;
   let inputTaskValue = document.getElementById(taskNameInputId).value;
 
   if (Validator.isStringAboveLengthLimit(100, inputTaskValue)) {
-    showInvalidMessage(messageLabels[0]);
+    uiHandler.showInvalidMessage(messageLabels[0]);
     numberOfInvalids++;
   }
 
   if (Validator.isStringEmpty(inputTaskValue)) {
-    showInvalidMessage(messageLabels[0]);
+    uiHandler.showInvalidMessage(messageLabels[0]);
     numberOfInvalids++;
   }
 
-  if ( Validator.isOnlyOneCheckBoxSelected( document.getElementsByName(statusInputId)) ) {
-    showInvalidMessage(messageLabels[1]);
+  if ( Validator.isOnlyOneCheckBoxSelected(document.getElementsByName(statusInputId))) {
+    uiHandler.showInvalidMessage(messageLabels[1]);
     numberOfInvalids++;
   }
   return numberOfInvalids === 0;
-}
-
-function showInvalidMessage(targetSpan) {
-  document.getElementById(targetSpan).classList.remove("hide-message");
-}
-
-function hideInvalidMessages(targetSpan) {
-  targetSpan.forEach(span => {
-    document.getElementById(span).classList.add("hide-message");
-  });
 }
 
 function addTask() {
@@ -121,13 +111,16 @@ document.getElementById("filter-text").addEventListener("keyup", function(e) {
   rerenderFilteredTasks();
 });
 
-document.getElementById("filter-status").addEventListener("change", function(e) {
+document
+  .getElementById("filter-status")
+  .addEventListener("change", function(e) {
     taskList.filtersToApply.status = e.target.value;
     rerenderFilteredTasks();
   });
 
 document.getElementById("sort-date").addEventListener("click", function(e) {
-  taskList.filtersToApply.oldestToNewest = !taskList.filtersToApply.oldestToNewest;
+  taskList.filtersToApply.oldestToNewest = !taskList.filtersToApply
+    .oldestToNewest;
   uiHandler.changeSortByDateText(taskList.filtersToApply.oldestToNewest);
   rerenderFilteredTasks();
 });
